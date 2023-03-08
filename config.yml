@@ -14,6 +14,11 @@ group:
   # Какой символ надо ввести в начало команды чтобы выполнить команду
   symbol: "/"
 
+# Список команд которые будут запрещены
+blocked:
+  - "stop"
+  - "whitelist"
+
 
 
 # Введите IP адрес сервера
@@ -24,4 +29,4 @@ address: "ruby.MCPEhost.ru"
 port: 23038
 
 # Введите RCON пароль сервера
-password: "qwerty"
+password: "qwerty1"
