@@ -7,6 +7,10 @@ def connect(session):
 	rcon_session = session
 
 def send_command(command):
-	answer = rcon_session.command(command)
-	answer = re.sub(re.compile(r"\x1B[@-_][0-?]*[ -/]*[@-~]"), "", answer)
-	return answer
+	try:
+		answer = rcon_session.command(command)
+		answer = re.sub(re.compile(r"\x1B[@-_][0-?]*[ -/]*[@-~]"), "", answer)
+		return answer
+	except Exception as error:
+		print(f"ОШИБКА | [RCON] {error}")
+		exit()
