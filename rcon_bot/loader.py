@@ -15,11 +15,13 @@ password = config["password"]
 users = config["users"]
 group_enable = config["group"]["enable"]
 symbol = config["group"]["symbol"]
+blocked_commads = config["blocked"]
 
 try:
 	client = RCONClient(ip, port = port)
 	if client.login(password):
 		rcon.connect(client)
+		rcon.settings("blocked_commads", blocked_commads)
 		print("ИНФО | [RCON] Успешное подключение")
 	else:
 		print("ОШИБКА | [RCON] Не верный пароль")
