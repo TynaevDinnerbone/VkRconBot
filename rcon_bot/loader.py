@@ -13,8 +13,8 @@ ip = config["address"]
 port = config["port"]
 password = config["password"]
 users = config["users"]
-group_enable = config["group"]["enable"]
-symbol = config["group"]["symbol"]
+group_enable = config["group_enable"]
+prefix = config["prefix"]
 blocked_commads = config["blocked"]
 
 try:
@@ -22,6 +22,7 @@ try:
 	if client.login(password):
 		rcon.connect(client)
 		rcon.settings("blocked_commads", blocked_commads)
+		rcon.settings("rcon_data", [ip, port, password])
 		print("ИНФО | [RCON] Успешное подключение")
 	else:
 		print("ОШИБКА | [RCON] Не верный пароль")
@@ -36,7 +37,7 @@ try:
 	vk_bot.connect(vk_session)
 	vk_bot.settings("group_enable", group_enable)
 	vk_bot.settings("allowed_users", users)
-	vk_bot.settings("command_symbol", symbol)
+	vk_bot.settings("command_prefix", prefix)
 	vk_bot.run()
 
 except vk_api.exceptions.ApiError as error:
