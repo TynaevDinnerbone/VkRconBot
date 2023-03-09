@@ -5,7 +5,7 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 vk_session = []
 allowed_users = []
 enable_group = False
-command_symbol = "/"
+command_prefix = "/"
 
 def connect(session):
 	global vk_session
@@ -18,9 +18,9 @@ def settings(setting, answer):
 	if setting == "group_enable":
 		global enable_group
 		enable_group = answer
-	if setting == "command_symbol":
-		global command_symbol
-		command_symbol = answer
+	if setting == "command_prefix":
+		global command_prefix
+		command_prefix = answer
 
 def execute(command):
 	cmd = rcon.send_command(command)
@@ -28,31 +28,30 @@ def execute(command):
 
 def handle_message(event):
 	if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-		if not(event.user_id in allowed_users):
-			return
 		vk = vk_session.get_api()
-		response = vk.messages.getConversationsById(peer_ids = event.peer_id)
 		msg = event.text
-		type = response["items"][0]["peer"]["type"]
-		if type == "user":
-			cmd = execute(msg)
-			vk.messages.send(
-				user_id = event.user_id,
-				message = cmd,
-				random_id = 0
-			)
+		if msg[0] != command_prefix:
 			return
-		else:
-			if not(enable_group):
-				return
-			if msg[0] != command_symbol:
-				return
-			cmd = execute(msg[1:])
+		if msg[1:] == "id":
 			vk.messages.send(
 				peer_id = event.peer_id,
-				message = cmd,
+				message = "Ваш цифровой ID: " + str(event.user_id),
 				random_id = 0
 			)
+			return
+		if not(event.user_id in allowed_users):
+			return
+		response = vk.messages.getConversationsById(peer_ids = event.peer_id)
+		type = response["items"][0]["peer"]["type"]
+		if type == "chat":
+			if not(enable_group):
+				return
+		cmd = execute(msg[1:])
+		vk.messages.send(
+			peer_id = event.peer_id,
+			message = cmd,
+			random_id = 0
+		)
 
 def run():
 	longpoll = VkLongPoll(vk_session)
