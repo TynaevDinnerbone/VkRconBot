@@ -47,11 +47,13 @@ def handle_message(event):
 			if not(enable_group):
 				return
 		cmd = execute(msg[1:])
-		vk.messages.send(
-			peer_id = event.peer_id,
-			message = cmd,
-			random_id = 0
-		)
+		message_parts = [cmd[i:i+4000] for i in range(0, len(cmd), 4000)]
+		for part in message_parts:
+			vk.messages.send(
+				peer_id = event.peer_id,
+				message = part,
+				random_id = 0
+			)
 
 def run():
 	longpoll = VkLongPoll(vk_session)
